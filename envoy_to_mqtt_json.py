@@ -370,7 +370,7 @@ def try_stream_meters(url):
         if is_json_valid(stream.content):
             if DEBUG: print(dt_string, 'Json Response:', stream.json())
             json_string = json.dumps(stream.json())
-            if stream.json() == "[]":
+            if stream.json() == "b'[]'":
                 if DEBUG: print(dt_string, 'return fail', stream.json())
                 return "fail"
             client.publish(topic= MQTT_TOPIC , payload= json_string, qos=0 )
