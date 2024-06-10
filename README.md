@@ -254,7 +254,7 @@ Create a file called envoy.service with your favourite file editor and add the f
 
 [Unit]
 Description=Envoy stream to MQTT
-Documentation=https://github.com/vk2him/Enphase-Envoy-mqtt-json
+Documentation=https://github.com/jpbunschoten/Enphase-Envoy-mqtt-json
 After=network.target mosquitto.service
 StartLimitIntervalSec=0
 
