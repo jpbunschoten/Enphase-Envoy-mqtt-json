@@ -8,6 +8,7 @@
 # Version 1.3 7th April 2022 - converted to work as a Home Assistant Addon
 # 
 #Version 1.4 17th July 2023 - converted to work with V7 firmware by https://github.com/helderfmf
+# Version june-2024: added reading out inverters
 #
 # Ian Mills
 # vk2him@gmail.com
@@ -348,14 +349,8 @@ def scrape_stream_livedata():
 
         except requests.exceptions.RequestException as e:
             print(dt_string, ' Exception fetching stream data: %s' % e)
-
-def scrape_stream_meters():
-    global ENVOY_TOKEN
-    ENVOY_TOKEN=token_gen(ENVOY_TOKEN)
-    while True:
-        try:
-            url = 'https://%s/ivp/meters/readings' % ENVOY_HOST
-            if DEBUG: print(dt_string, 'Url:', url)
+def try_stream_meters(url):
+     if DEBUG: print(dt_string, 'Url:', url)
             headers = {"Authorization": "Bearer " + ENVOY_TOKEN}
             if DEBUG: print(dt_string, 'headers:', headers)
             stream = requests.get(url, timeout=5, verify=False, headers=headers)
@@ -374,6 +369,8 @@ def scrape_stream_meters():
                 if is_json_valid(stream.content):
                     if DEBUG: print(dt_string, 'Json Response:', stream.json())
                     json_string = json.dumps(stream.json())
+                    if json_string == "[]":
+                        return "fail"
                     client.publish(topic= MQTT_TOPIC , payload= json_string, qos=0 )
                     if USE_FREEDS: 
                         json_string_freeds = json.dumps(round(stream.json()[1]["activePower"]))
@@ -382,6 +379,17 @@ def scrape_stream_meters():
                     time.sleep(0.6)
                 else:
                     print(dt_string, 'Invalid Json Response:', stream.content)
+    return "OK"
+                    
+def scrape_stream_meters():
+    global ENVOY_TOKEN
+    ENVOY_TOKEN=token_gen(ENVOY_TOKEN)
+    while True:
+        try:
+            status = try_stream_meters ('https://%s/ivp/meters/readings' % ENVOY_HOST)
+            if status = "fail" :
+                try_stream_meters( "https://%s/api/v1/production/inverters"  % ENVOY_HOST)
+        
         except requests.exceptions.RequestException as e:
             print(dt_string, ' Exception fetching stream data: %s' % e)
 
