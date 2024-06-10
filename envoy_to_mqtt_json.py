@@ -369,6 +369,7 @@ def try_stream_meters(url):
     else:
         if is_json_valid(stream.content):
             if DEBUG: print(dt_string, 'Json Response:', stream.json())
+            if DEBUG: print(dt_string, 'MEMEME:')
             json_string = json.dumps(stream.json())
             if stream.content== " b'[]'":
                 if DEBUG: print(dt_string, 'return fail', stream.json())
