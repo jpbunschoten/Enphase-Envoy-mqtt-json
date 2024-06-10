@@ -349,36 +349,38 @@ def scrape_stream_livedata():
 
         except requests.exceptions.RequestException as e:
             print(dt_string, ' Exception fetching stream data: %s' % e)
+            
 def try_stream_meters(url):
-     if DEBUG: print(dt_string, 'Url:', url)
-            headers = {"Authorization": "Bearer " + ENVOY_TOKEN}
-            if DEBUG: print(dt_string, 'headers:', headers)
-            stream = requests.get(url, timeout=5, verify=False, headers=headers)
-            if DEBUG: print(dt_string, 'stream:', stream.content)
-            if stream.status_code == 401:
-                print(dt_string,'Failed to autenticate', stream, ' generating new token')
-                ENVOY_TOKEN=token_gen(None)
-                headers = {"Authorization": "Bearer " + ENVOY_TOKEN}
-                if DEBUG: print(dt_string, 'headers after 401:', headers)
-                stream = requests.get(url, timeout=5, verify=False, headers=headers)
-                if DEBUG: print(dt_string, 'stream after 401:', stream.content)
-            elif stream.status_code != 200:
-                print(dt_string,'Failed connect to Envoy got ', stream)
-                if DEBUG: print(dt_string, 'stream after != 200:', stream.content)
+    if DEBUG: print(dt_string, 'Url:', url)
+    headers = {"Authorization": "Bearer " + ENVOY_TOKEN}
+    if DEBUG: print(dt_string, 'headers:', headers)
+    stream = requests.get(url, timeout=5, verify=False, headers=headers)
+    if DEBUG: print(dt_string, 'stream:', stream.content)
+    if stream.status_code == 401:
+        print(dt_string,'Failed to autenticate', stream, ' generating new token')
+        ENVOY_TOKEN=token_gen(None)
+        headers = {"Authorization": "Bearer " + ENVOY_TOKEN}
+        if DEBUG: print(dt_string, 'headers after 401:', headers)
+        stream = requests.get(url, timeout=5, verify=False, headers=headers)
+        if DEBUG: print(dt_string, 'stream after 401:', stream.content)
+    elif stream.status_code != 200:
+        print(dt_string,'Failed connect to Envoy got ', stream)
+        if DEBUG: print(dt_string, 'stream after != 200:', stream.content)
+    else:
+        if is_json_valid(stream.content):
+            if DEBUG: print(dt_string, 'Json Response:', stream.json())
+            json_string = json.dumps(stream.json())
+            if json_string == "[]":
+                if DEBUG: print(dt_string, 'return fail', stream.json())
+                return "fail"
+            client.publish(topic= MQTT_TOPIC , payload= json_string, qos=0 )
+            if USE_FREEDS: 
+                json_string_freeds = json.dumps(round(stream.json()[1]["activePower"]))
+                if DEBUG: print(dt_string, 'Json freeds:', stream.json()[1]["activePower"])
+                client.publish(topic= MQTT_TOPIC_FREEDS , payload= json_string_freeds, qos=0 )
+                time.sleep(0.6)
             else:
-                if is_json_valid(stream.content):
-                    if DEBUG: print(dt_string, 'Json Response:', stream.json())
-                    json_string = json.dumps(stream.json())
-                    if json_string == "[]":
-                        return "fail"
-                    client.publish(topic= MQTT_TOPIC , payload= json_string, qos=0 )
-                    if USE_FREEDS: 
-                        json_string_freeds = json.dumps(round(stream.json()[1]["activePower"]))
-                        if DEBUG: print(dt_string, 'Json freeds:', stream.json()[1]["activePower"])
-                        client.publish(topic= MQTT_TOPIC_FREEDS , payload= json_string_freeds, qos=0 )
-                    time.sleep(0.6)
-                else:
-                    print(dt_string, 'Invalid Json Response:', stream.content)
+                print(dt_string, 'Invalid Json Response:', stream.content)
     return "OK"
                     
 def scrape_stream_meters():
