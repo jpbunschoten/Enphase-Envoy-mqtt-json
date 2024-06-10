@@ -346,7 +346,6 @@ def scrape_stream_livedata():
                     time.sleep(0.6)
             elif not is_json_valid(stream.content):
                 print(dt_string, 'Invalid Json Response:', stream.content)
-
         except requests.exceptions.RequestException as e:
             print(dt_string, ' Exception fetching stream data: %s' % e)
             
@@ -390,9 +389,8 @@ def scrape_stream_meters():
     while True:
         try:
             status = try_stream_meters ('https://%s/ivp/meters/readings' % ENVOY_HOST)
-            if status = "fail" :
+            if status == "fail" :
                 try_stream_meters( "https://%s/api/v1/production/inverters"  % ENVOY_HOST)
-        
         except requests.exceptions.RequestException as e:
             print(dt_string, ' Exception fetching stream data: %s' % e)
 
