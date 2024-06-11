@@ -59,6 +59,7 @@ MQTT_PASSWORD = option_dict["MQTT_PASSWORD"]    # If you use an external broker,
 ENVOY_HOST = option_dict["ENVOY_HOST"]  # ** Enter envoy-s IP. Note - use FQDN and not envoy.local if issues connecting 
 ENVOY_USER= option_dict["ENVOY_USER"]
 ENVOY_USER_PASS= option_dict["ENVOY_USER_PASS"]
+POLLING_FREQ = option_dict["POLLING_FREQ"]
 USE_FREEDS= option_dict["USE_FREEDS"]
 DEBUG= option_dict["DEBUG"]
 MQTT_TOPIC_FREEDS = "Inverter/GridWatts"
