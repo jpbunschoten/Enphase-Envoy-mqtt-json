@@ -33,6 +33,7 @@ import xml.etree.ElementTree as ET
 import hashlib
 import os
 
+SW_Version = "J.0.0.0"
 
 with open("data/options.json", "r") as f:
     option_dict = json.load(f)
@@ -78,6 +79,9 @@ def is_json_valid(json_data):
         return False
     return True
 
+def printSWVersion():
+	print(dt_string, "SW version:". SW_Version)
+
 # Get info
 url_info ='http://%s/info' % ENVOY_HOST
 response_info = requests.get(url_info, verify=False)
@@ -121,6 +125,7 @@ else:
 
 #Token generator
 def token_gen(token):
+	if DEBUG: printSWVersion
     if token is None or token=='':
         print(dt_string,'Generating new token')
         data = {'user[email]': ENVOY_USER, 'user[password]': ENVOY_USER_PASS}
