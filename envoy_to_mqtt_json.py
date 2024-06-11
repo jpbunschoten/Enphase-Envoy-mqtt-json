@@ -349,15 +349,16 @@ def scrape_stream_livedata():
         except requests.exceptions.RequestException as e:
             print(dt_string, ' Exception fetching stream data: %s' % e)
             
-def try_stream_meters(url:
+def try_stream_meters(url):
     global ENVOY_TOKEN
     ENVOY_TOKEN=token_gen(ENVOY_TOKEN)
-    if DEBUG: print(dt_string, 'token:', ENVOY_TOKEN)
+    #if DEBUG: print(dt_string, 'token:', ENVOY_TOKEN)
     if DEBUG: print(dt_string, 'Url:', url)
     headers = {"Authorization": "Bearer " + ENVOY_TOKEN}
-    if DEBUG: print(dt_string, 'headers:', headers)
+    #if DEBUG: print(dt_string, 'headers:', headers)
     stream = requests.get(url, timeout=5, verify=False, headers=headers)
     if DEBUG: print(dt_string, 'stream:', stream.content)
+    if DEBUG: print(dt_string, 'stream: |%s|', % stream.content)
     if stream.status_code == 401:
         print(dt_string,'Failed to autenticate', stream, ' generating new token')
         ENVOY_TOKEN=token_gen(None)
@@ -370,8 +371,7 @@ def try_stream_meters(url:
         if DEBUG: print(dt_string, 'stream after != 200:', stream.content)
     else:
         if is_json_valid(stream.content):
-            if DEBUG: print(dt_string, 'Json Response:', stream.json())
-            if DEBUG: print(dt_string, 'MEMEME:')
+            if DEBUG: print(dt_string, 'Json valid: Response:', stream.json())
             json_string = json.dumps(stream.json())
             if stream.content== " b'[]'":
                 if DEBUG: print(dt_string, 'return fail', stream.json())
