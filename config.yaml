@@ -1,5 +1,5 @@
 name: "Jacob's version: Stream mqtt from Enphase Envoy"
-description: "Converts Envoy Json to mqtt - V5 and v7 Envoy"
+description: "Converts Envoy Json to mqtt - V5 and V7 Envoy"
 version: "1.0.14"
 slug: "envoy_to_mqtt_json"
 init: false
@@ -10,7 +10,7 @@ arch:
   - armv7
   - i386
 options:
-  MQTT_HOST: ip.address.of.homeasistant
+  MQTT_HOST: ip.address.of.homeassistant
   MQTT_USER: mqtt.user
   MQTT_PASSWORD: mqtt.password
   MQTT_PORT: 1883
