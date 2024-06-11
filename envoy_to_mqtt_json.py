@@ -351,14 +351,14 @@ def scrape_stream_livedata():
             
 def try_stream_meters(url):
     global ENVOY_TOKEN
-    ENVOY_TOKEN=token_gen(ENVOY_TOKEN)
+    ENVOY_TOKEN = token_gen(ENVOY_TOKEN)
     #if DEBUG: print(dt_string, 'token:', ENVOY_TOKEN)
     if DEBUG: print(dt_string, 'Url:', url)
     headers = {"Authorization": "Bearer " + ENVOY_TOKEN}
     #if DEBUG: print(dt_string, 'headers:', headers)
     stream = requests.get(url, timeout=5, verify=False, headers=headers)
     if DEBUG: print(dt_string, 'stream:', stream.content)
-    if DEBUG: print(dt_string, 'stream: |%s|', % stream.content)
+    if DEBUG: print(dt_string, 'stream.content: |%s|', % stream.content)
     if stream.status_code == 401:
         print(dt_string,'Failed to autenticate', stream, ' generating new token')
         ENVOY_TOKEN=token_gen(None)
@@ -372,9 +372,11 @@ def try_stream_meters(url):
     else:
         if is_json_valid(stream.content):
             if DEBUG: print(dt_string, 'Json valid: Response:', stream.json())
+            if DEBUG: print(dt_string, 'Json valid: content:', stream.content)
             json_string = json.dumps(stream.json())
-            if stream.content== " b'[]'":
-                if DEBUG: print(dt_string, 'return fail', stream.json())
+            if DEBUG: print(dt_string, 'Json string:', json_string)
+            if stream.content == " b'[]'":
+                if DEBUG: print(dt_string, 'return fail', stream.content)
                 return "fail"
             client.publish(topic= MQTT_TOPIC , payload= json_string, qos=0 )
             if USE_FREEDS: 
@@ -382,8 +384,8 @@ def try_stream_meters(url):
                 if DEBUG: print(dt_string, 'Json freeds:', stream.json()[1]["activePower"])
                 client.publish(topic= MQTT_TOPIC_FREEDS , payload= json_string_freeds, qos=0 )
                 time.sleep(0.6)
-            else:
-                print(dt_string, 'Invalid Json Response:', stream.content)
+        else:
+            print(dt_string, 'Invalid Json Response:', stream.content)
     return "OK"
                     
 def scrape_stream_meters():
