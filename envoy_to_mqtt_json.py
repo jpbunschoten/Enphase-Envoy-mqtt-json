@@ -349,7 +349,9 @@ def scrape_stream_livedata():
         except requests.exceptions.RequestException as e:
             print(dt_string, ' Exception fetching stream data: %s' % e)
             
-def try_stream_meters(url, ENVOY_TOKEN):
+def try_stream_meters(url:
+    global ENVOY_TOKEN
+    ENVOY_TOKEN=token_gen(ENVOY_TOKEN)
     if DEBUG: print(dt_string, 'token:', ENVOY_TOKEN)
     if DEBUG: print(dt_string, 'Url:', url)
     headers = {"Authorization": "Bearer " + ENVOY_TOKEN}
@@ -385,16 +387,17 @@ def try_stream_meters(url, ENVOY_TOKEN):
     return "OK"
                     
 def scrape_stream_meters():
-    global ENVOY_TOKEN
-    if DEBUG: print(dt_string, 'token:', ENVOY_TOKEN)
-    ENVOY_TOKEN = token_gen(ENVOY_TOKEN)
-    if DEBUG: print(dt_string, 'token:', ENVOY_TOKEN)
+    #global ENVOY_TOKEN
+    #ENVOY_TOKEN = token_gen(ENVOY_TOKEN)
     while True:
         try:
-            status = try_stream_meters ('https://%s/ivp/meters/readings' % ENVOY_HOST, ENVOY_TOKEN)
+            url = 'https://%s/ivp/meters/readings' % ENVOY_HOST
+            status = try_stream_meters (url)
             if DEBUG: print(dt_string, 'fie response:', status)
             if status == "fail" :
-                try_stream_meters( 'https://%s/api/v1/production/inverters'  % ENVOY_HOST. ENVOY_TOKEN)
+                url = 'https://%s/api/v1/production/inverters'  % ENVOY_HOST
+                try_stream_meters( url)
+            pass
         except requests.exceptions.RequestException as e:
             print(dt_string, ' Exception fetching stream data: %s' % e)
 
