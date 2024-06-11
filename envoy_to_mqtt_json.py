@@ -125,7 +125,7 @@ else:
 
 #Token generator
 def token_gen(token):
-	if DEBUG: printSWVersion
+	if DEBUG: printSWVersion()
     if token is None or token=='':
         print(dt_string,'Generating new token')
         data = {'user[email]': ENVOY_USER, 'user[password]': ENVOY_USER_PASS}
