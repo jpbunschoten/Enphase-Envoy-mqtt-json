@@ -391,7 +391,7 @@ def try_stream_meters(url):
                 time.sleep(0.6)
         else:
             print(dt_string, 'Invalid Json Response:', stream.content)
-			return "fail"
+	        return "fail"
     return "OK"
                     
 def scrape_stream_meters():
