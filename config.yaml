@@ -18,7 +18,7 @@ options:
   ENVOY_HOST: envoy.local
   ENVOY_USER: enter.enphase.userid@email.com
   ENVOY_USER_PASS: enter.enphase.password
-  POLLING_FREQ: polling_frequency
+  POLLING_FREQ: 1
   USE_FREEDS: False
   DEBUG: False
 
