@@ -1,5 +1,5 @@
 {
-  "MQTT_HOST": "ip.address.of.homeasistant",
+  "MQTT_HOST": "ip.address.of.homeassistant",
   "MQTT_USER": "mqtt.user",
   "MQTT_PASSWORD": "mqtt.password",
   "MQTT_PORT": "1883",
