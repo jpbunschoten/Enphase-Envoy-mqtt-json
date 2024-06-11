@@ -399,7 +399,9 @@ def try_stream_meters(url):
 def scrape_stream_meters():
     #global ENVOY_TOKEN
     #ENVOY_TOKEN = token_gen(ENVOY_TOKEN)
+    
     while True:
+        time.sleep(POLLING_FREQ - 1)
         try:
             url = 'https://%s/ivp/meters/readings' % ENVOY_HOST
             status = try_stream_meters (url)
