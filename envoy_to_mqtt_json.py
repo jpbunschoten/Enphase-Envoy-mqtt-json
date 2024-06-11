@@ -376,13 +376,14 @@ def try_stream_meters(url):
         if DEBUG: print(dt_string, 'stream after != 200:', stream.content)
     else:
         if is_json_valid(stream.content):
-            if DEBUG: print(dt_string, 'Json valid: Response:', stream.json())
-            if DEBUG: print(dt_string, 'Json valid: content:', stream.content)
+            #if DEBUG: print(dt_string, 'Json valid: Response:', stream.json())
+            #if DEBUG: print(dt_string, 'Json valid: content:', stream.content)
             json_string = json.dumps(stream.json())
             if DEBUG: print(dt_string, 'Json string:', json_string)
             if json_string == "[]":
                 if DEBUG: print(dt_string, 'return fail', stream.content)
                 return "fail"
+            if DEBUG: print(dt_string, "to mqtt", json_string)
             client.publish(topic= MQTT_TOPIC , payload= json_string, qos=0 )
             if USE_FREEDS: 
                 json_string_freeds = json.dumps(round(stream.json()[1]["activePower"]))
