@@ -386,12 +386,15 @@ def try_stream_meters(url, ENVOY_TOKEN):
                     
 def scrape_stream_meters():
     global ENVOY_TOKEN
+    if DEBUG: print(dt_string, 'token:', ENVOY_TOKEN)
     ENVOY_TOKEN = token_gen(ENVOY_TOKEN)
+    if DEBUG: print(dt_string, 'token:', ENVOY_TOKEN)
     while True:
         try:
             status = try_stream_meters ('https://%s/ivp/meters/readings' % ENVOY_HOST, ENVOY_TOKEN)
+            if DEBUG: print(dt_string, 'fie response:', status)
             if status == "fail" :
-                try_stream_meters( "https://%s/api/v1/production/inverters"  % ENVOY_HOST. ENVOY_TOKEN)
+                try_stream_meters( 'https://%s/api/v1/production/inverters'  % ENVOY_HOST. ENVOY_TOKEN)
         except requests.exceptions.RequestException as e:
             print(dt_string, ' Exception fetching stream data: %s' % e)
 
