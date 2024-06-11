@@ -363,7 +363,7 @@ def try_stream_meters(url):
     #if DEBUG: print(dt_string, 'headers:', headers)
     stream = requests.get(url, timeout=5, verify=False, headers=headers)
     if DEBUG: print(dt_string, 'stream:', stream.content)
-    if DEBUG: print(dt_string, 'stream.content: |%s|', % stream.content)
+    if DEBUG: print(dt_string, 'stream.content: |%s|',  stream.content)
     if stream.status_code == 401:
         print(dt_string,'Failed to autenticate', stream, ' generating new token')
         ENVOY_TOKEN=token_gen(None)
